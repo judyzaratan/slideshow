@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+  body, h1, h2, h3, p, ul {
+    padding: 0px;
+    margin: 0px;
+    font-family: Verdana, Arial, Sans-serif;
+  }
+  .hidden{
+    display: none;
+  }
+  </style>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+<body>
+
+  <div class="slideshow">
+
+  <button class="alpha">Alpha</button>
+  <button class="default">Default</button>
+  <button class="prev">Prev</button>
+  <button class="next">Next</button>
+  <ul class="slides">
+
+  </ul>
+  </div>
+
+  <script>
+    var app = {};
+    app.server = 'https://api2.healthline.com/api/service/2.0/slideshow/content?partnerId=7eef498c-f7fa-4f7c-81fd-b1cc53ac7ebc&contentid=17103&includeLang=en';
+
+    app.sort = function(sortType){
+      //fetch all li with photos
+      var slides = $('li:gt(0)').get();
+
+      slides.sort(function(a, b) {
+
+        //Sort type based on click
+        switch(sortType){
+          case 'alpha':
+          var keyA = $(a).children('h3').text();
+          var keyB = $(b).children('h3').text();
+          break;
+        case 'default':
+          var keyA = $(a).attr('id');
+          var keyB = $(b).attr('id');
+          break;
+        };
+
+        keyA = $.trim(keyA).toUpperCase();
+        keyB = $.trim(keyB).toUpperCase();
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+
+      $('.slides').append(slides);
+      app.reset();
+    };
+
+    //Display first photo
+    app.reset = function(){
+      $('.photo').removeClass('show load').addClass('hidden');
+      $('.photo:eq(0)').removeClass('hidden')
+                        .addClass('show load')
+                        .find('img').attr('src', $('.load.show> img').data('defer-src'));
+
+
+      $('.photo:eq(0)').next()
+                        .addClass('load')
+                        .find('img').attr('src', $('.load.hidden> img').data('defer-src'));
+    };
+
+    app.next = function(){
+      if($('li').hasClass('show')){
+        var $activeSlide = $('.show');
+        var $nextSlide = $('.show').next();
+        var $loadNextPic = $nextSlide.next();
+
+        $activeSlide.removeClass('show load').addClass('hidden');
+        $nextSlide.removeClass('hidden').addClass('show');
+        $loadNextPic.addClass('load')
+                    .find('img').attr('src', $('.load.hidden >img').data('defer-src'));
+      } else {
+        app.reset();
+      }
+    };
+
+    app.prev = function(){
+      $('.show').removeClass('show').addClass('hidden')
+                .prev()
+                .removeClass('hidden').addClass('show');
+    };
+
+    app.track = function(){
+      var nextCount = 0;
+      var prevCount = 0;
+      var img = new Image();
+
+      //closure created to keep count when track image is called
+      return function(input){
+        var update = (input === "next")? ++nextCount : ++prevCount ;
+        img.src = "http://www.healthline.com/images/clear.gif?" + input + update.toString();
+      };
+    };
+
+
+    //grab data from api
+    app.fetch = function(){
+      $.ajax({
+        url: app.server,
+        type: 'GET',
+        dataType: 'jsonp',
+        success: function(data){
+          var photos = data.data[0].slides;
+
+          //build html list of data
+          var photosHtml = $.map(photos, function(photo, i){
+            var listItem = $('<li id="' + i + '" class="photo hidden"></li>');
+            var title = $('<h3>'+ photo.title + '</h3>');
+            var image = $('<img src=" " data-defer-src="http://www.healthline.com' + photo.image.imageUrl + '">');
+            var body = $('<p>' + photo.body + '</p>');
+
+            title.appendTo(listItem);
+            image.appendTo(listItem);
+            body.appendTo(listItem);
+
+            return listItem;
+          });
+
+          $('.slides').append(photosHtml);
+          $('li > p:empty').remove();
+          app.reset();
+        }
+      });
+    };
+
+
+    $(document).ready(function(){
+      //grab data and display 
+      app.fetch();
+      //initialize tracking
+      var sendTrack = app.track();
+
+      //event handlers for button clicks
+      $('button.next').click(function(){app.next(); sendTrack("next"); });
+      $('button.prev').click(function(){app.prev(); sendTrack("prev")});
+
+      //sort options
+      $('button.alpha').click(function(){app.sort('alpha');});
+      $('button.default').click(function(){app.sort('default');});
+    });
+  </script>
+</body>
+</html>
+
