@@ -2,61 +2,66 @@
 <html>
 <head>
   <style type="text/css">
-  body, h1, h2, h3, p, ul, div, a {
-    padding: 0px;
-    font-family: Verdana, Arial, Sans-serif;
-    margin: 0 auto;
-    overflow: hidden;
-    color: gray;
-  }
-  h3{ 
-    padding: 5px;
-    text-align: center;
-    color: purple;
-  }
- .button {
-  text-decoration: none;
-  height: 50px;
- }
+    body, h1, h2, h3, p, ul, div, a {
+      padding: 0px;
+      font-family: Verdana, Arial, Sans-serif;
+      margin: 0 auto;
+      overflow: hidden;
+      color: gray;
+    }
 
-  img{
-    border: 5px solid gray;
-    padding: 5px;
-    margin: 5px;
-    float: left;
-  }
+    h3{ 
+      padding: 5px;
+      text-align: center;
+      color: purple;
+    }
+    .button{
+      text-decoration: none;
+      height: 50px;
+    }
 
-  .hidden{
-    position:absolute;
-    opacity: 0;
-  }
-  .navigation{
-    margin: 0px 50px  0px 50px;
-    height: 50px;
+    img{
+      border: 5px solid gray;
+      padding: 5px;
+      margin: 5px;
+      float: left;
+    }
 
-  }
-  .prev{
-    float:left;
-  }
-  .next{
-    float:right;
-  }
-.p{
-  float: left;
+    .hidden{
+      position:absolute;
+      opacity: 0;
+    }
 
-}
-  .show{
-    opacity: 1;
-    position: static;
-    transition: 1s opacity;
-  }
+    .navigation{
+      margin: 0px 50px 0px 50px;
+      height: 50px;
 
-  .slides {
-    position:absolute;
-    margin: 0px 50px ;
-    border: 10px solid gray;
+    }
 
-  }
+    .prev{
+      float:left;
+    }
+
+    .next{
+      float:right;
+    }
+
+    .p{
+      float: left;
+    }
+
+    .show{
+      opacity: 1;
+      position: static;
+      transition: 1s opacity;
+    }
+
+    .slides {
+      position:absolute;
+      margin: 0px 50px ;
+      border: 10px solid gray;
+
+    }
   </style>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -65,12 +70,13 @@
 
   <div class="slideshow">
     <div class="sortOptions">
-      <a class="alpha button" href = "#">Alpha</a>
+      <h4>Sort Options</h4>
+      <a class="alpha button" href = "#">Alpha</a> <span>|</span>
       <a class="default button" href = "#">Default</a>
     </div>
     <div class="navigation">
       <a class="prev button fa fa-arrow-left fa-2x" href = "#"></a>
-      <a  class="next button fa fa-arrow-right fa-2x" href = "#"></a>
+      <a class="next button fa fa-arrow-right fa-2x" href = "#"></a>
     </div>
       <ul class="slides">
       </ul>
